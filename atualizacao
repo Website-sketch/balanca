@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balança de Decisões</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .balanca-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+        .balanca {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            border-top: 5px solid black;
+            position: absolute;
+            top: 50%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .prato {
+            width: 120px;
+            min-height: 30px;
+            background: lightgray;
+            border: 2px solid black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 5px;
+        }
+        .item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: steelblue;
+            color: white;
+            border-radius: 5px;
+            margin: 2px;
+            width: 90%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Balança de Decisões</h1>
+    <div class="container">
+        <div>
+            <input type="text" id="itemNome" placeholder="Digite o item">
+            <input type="number" id="itemPeso" placeholder="Peso" min="1" max="10">
+            <select id="lado">
+                <option value="esquerda">Esquerda</option>
+                <option value="direita">Direita</option>
+            </select>
+            <button onclick="adicionarItem()">Adicionar</button>
+        </div>
+        <br>
+        <div class="balanca-container">
+            <div class="balanca" id="balanca">
+                <div id="pratoEsquerdo" class="prato"></div>
+                <div id="pratoDireito" class="prato"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pesoEsquerda = 0;
+        let pesoDireita = 0;
+
+        function adicionarItem() {
+            let nome = document.getElementById('itemNome').value;
+            let peso = parseInt(document.getElementById('itemPeso').value);
+            let lado = document.getElementById('lado').value;
+            
+            if (!nome || isNaN(peso) || peso < 1 || peso > 10) {
+                alert('Preencha o nome e escolha um peso entre 1 e 10');
+                return;
+            }
+
+            let item = document.createElement('div');
+            item.classList.add('item');
+            item.innerText = nome;
+            item.style.height = (peso * 10) + 'px';
+            
+            let prato;
+            if (lado === 'esquerda') {
+                prato = document.getElementById('pratoEsquerdo');
+                pesoEsquerda += peso;
+            } else {
+                prato = document.getElementById('pratoDireito');
+                pesoDireita += peso;
+            }
+            prato.appendChild(item);
+            atualizarBalanca();
+            
+            document.getElementById('itemNome').value = '';
+            document.getElementById('itemPeso').value = '';
+        }
+
+        function atualizarBalanca() {
+            let diferenca = pesoEsquerda - pesoDireita;
+            let inclinacao = diferenca * 2; // Ajusta a inclinação para melhor efeito visual
+            document.getElementById('balanca').style.transform = `rotate(${inclinacao}deg)`;
+        }
+    </script>
+</body>
+</html>
